@@ -1,87 +1,95 @@
-# `@napi-rs/package-template`
+# `@glueeeed/gluechat-crypto`
 
-![https://github.com/napi-rs/package-template/actions](https://github.com/napi-rs/package-template/workflows/CI/badge.svg)
+> High-performance cryptographic module written in Rust for [GlueChat](https://github.com/Glueeeeed/GlueChat), powered by [NAPI-RS](https://napi.rs).
 
-> Template project for writing node packages with napi-rs.
+## Features
 
-# Usage
+- **Symmetric Encryption & Decryption**: Authenticated encryption using **XChaCha20-Poly1305** (AEAD) with 24-byte nonces and 32-byte keys.
+- **Post-Quantum Key Exchange (ML-KEM-1024)**: One-Time Key (OTK) pair generation based on NIST post-quantum standard ML-KEM-1024 (via `aws-lc-rs`).
+- **Native Performance**: Implemented in Rust with zero-overhead Node-API (`napi-rs`) bindings.
 
-1. Click **Use this template**.
-2. **Clone** your project.
-3. Run `yarn install` to install dependencies.
-4. Run `yarn napi rename -n [@your-scope/package-name] -b [binary-name]` command under the project folder to rename your package.
+---
 
-## Install this test package
-
-```bash
-yarn add @napi-rs/package-template
-```
-
-## Ability
-
-### Build
-
-After `yarn build/npm run build` command, you can see `package-template.[darwin|win32|linux].node` file in project root. This is the native addon built from [lib.rs](./src/lib.rs).
-
-### Test
-
-With [ava](https://github.com/avajs/ava), run `yarn test/npm run test` to testing native addon. You can also switch to another testing framework if you want.
-
-### CI
-
-With GitHub Actions, each commit and pull request will be built and tested automatically in [`node@20`, `@node22`] x [`macOS`, `Linux`, `Windows`] matrix. You will never be afraid of the native addon broken in these platforms.
-
-### Release
-
-Release native package is very difficult in old days. Native packages may ask developers who use it to install `build toolchain` like `gcc/llvm`, `node-gyp` or something more.
-
-With `GitHub actions`, we can easily prebuild a `binary` for major platforms. And with `N-API`, we should never be afraid of **ABI Compatible**.
-
-The other problem is how to deliver prebuild `binary` to users. Downloading it in `postinstall` script is a common way that most packages do it right now. The problem with this solution is it introduced many other packages to download binary that has not been used by `runtime codes`. The other problem is some users may not easily download the binary from `GitHub/CDN` if they are behind a private network (But in most cases, they have a private NPM mirror).
-
-In this package, we choose a better way to solve this problem. We release different `npm packages` for different platforms. And add it to `optionalDependencies` before releasing the `Major` package to npm.
-
-`NPM` will choose which native package should download from `registry` automatically. You can see [npm](./npm) dir for details. And you can also run `yarn add @napi-rs/package-template` to see how it works.
-
-## Develop requirements
-
-- Install the latest `Rust`
-- Install `Node.js@10+` which fully supported `Node-API`
-- Install `yarn@1.x`
-
-## Test in local
-
-- yarn
-- yarn build
-- yarn test
-
-And you will see:
+## Installation
 
 ```bash
-$ ava --verbose
+# Using npm
+npm install @glueeeed/gluechat-crypto
 
-  ✔ sync function from native code
-  ✔ sleep function from native code (201ms)
-  ─
+# Using yarn
+yarn add @glueeeed/gluechat-crypto
 
-  2 tests passed
-✨  Done in 1.12s.
+# Using pnpm
+pnpm add @glueeeed/gluechat-crypto
 ```
 
-## Release package
+---
 
-Ensure you have set your **NPM_TOKEN** in the `GitHub` project setting.
+## API & Usage
 
-In `Settings -> Secrets`, add **NPM_TOKEN** into it.
+### 1. Symmetric Encryption & Decryption (XChaCha20-Poly1305)
 
-When you want to release the package:
+Encrypt and decrypt messages using a 32-byte base64-encoded key. Ciphertext output follows the `ciphertext_base64::nonce_base64` format.
 
-```bash
-npm version [<newversion> | major | minor | patch | premajor | preminor | prepatch | prerelease [--preid=<prerelease-id>] | from-git]
+```typescript
+import { encrypt, decrypt, randomBytes } from '@glueeeed/gluechat-crypto'
 
-git push
+// 1. Generate a random 32-byte key (Base64)
+const rawKey = randomBytes(32)
+const keyBase64 = Buffer.from(rawKey).toString('base64')
+
+const message = 'Hello GlueChat!'
+
+// 2. Encrypt plaintext
+const ciphertext = encrypt(message, keyBase64)
+console.log('Encrypted payload:', ciphertext) // "<base64_payload>::<base64_nonce>"
+
+// 3. Decrypt ciphertext
+const decrypted = decrypt(ciphertext, keyBase64)
+console.log('Decrypted message:', decrypted) // "Hello GlueChat!"
 ```
 
-GitHub actions will do the rest job for you.
+---
 
-> WARN: Don't run `npm publish` manually.
+### 2. Post-Quantum One-Time Keys (ML-KEM-1024)
+
+Generate batches of One-Time Keys (OTKs) for user accounts using post-quantum key encapsulation (ML-KEM-1024).
+
+```typescript
+import { generateOneTimeKeys, OneTimeKey } from '@glueeeed/gluechat-crypto'
+
+const keys: OneTimeKey[] = generateOneTimeKeys(5, 'alice', 'device1')
+
+console.log(keys)
+/*
+[
+  {
+    accountName: 'gluechat_alice',
+    secretName: 'device1-otk-a1b2c3d4',
+    id: 'a1b2c3d4',
+    pubKey: '<base64_public_key>',
+    privateKey: '<base64_private_key>'
+  },
+  ...
+]
+*/
+```
+
+---
+
+### 3. Random Bytes
+
+Generate cryptographically secure random bytes.
+
+```typescript
+import { randomBytes } from '@glueeeed/gluechat-crypto'
+
+const bytes: number[] = randomBytes(32)
+const buffer = Buffer.from(bytes)
+```
+
+---
+
+## License
+
+[MIT](./LICENSE)
