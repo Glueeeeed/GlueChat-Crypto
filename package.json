@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/Glueeeeed/GlueChatCrypto.git"
+    "url": "https://github.com/Glueeeeed/GlueChat-Crypto.git"
   },
   "license": "MIT",
   "keywords": [
