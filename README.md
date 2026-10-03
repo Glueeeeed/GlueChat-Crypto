@@ -1,4 +1,4 @@
-# `@glueeeed/gluechat-crypto`
+# GlueChat Crypto
 
 > High-performance cryptographic module written in Rust for [GlueChat](https://github.com/Glueeeeed/GlueChat), powered by [NAPI-RS](https://napi.rs).
 
@@ -8,7 +8,7 @@
 - **Post-Quantum Key Exchange (ML-KEM-1024)**: One-Time Key (OTK) pair generation based on NIST post-quantum standard ML-KEM-1024 (via `aws-lc-rs`).
 - **Native Performance**: Implemented in Rust with zero-overhead Node-API (`napi-rs`) bindings.
 
----
+--- 
 
 ## Installation
 
