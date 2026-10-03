@@ -9,7 +9,16 @@
  */
 export declare const __napiBindingTarget: 'native' | 'wasm32-wasi' | 'wasm32-wasip1'
 
+export declare function decapsulate(privateKeyBase64: string, ciphertextBase64: string): string
+
 export declare function decrypt(ciphertext: string, key: string): string
+
+export declare function encapsulate(publicKeyBase64: string): EncapsulationResult
+
+export interface EncapsulationResult {
+  ciphertext: string
+  sharedSecret: string
+}
 
 export declare function encrypt(plaintext: string, key: string): string
 

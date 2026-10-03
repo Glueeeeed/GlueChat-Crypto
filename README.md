@@ -90,6 +90,39 @@ const buffer = Buffer.from(bytes)
 
 ---
 
+### 4. Encapsulation & Decapsulation (ML-KEM-1024)
+
+Use ML-KEM-1024 post-quantum key encapsulation to establish a shared secret between two parties.
+
+```typescript
+import {
+  generateOneTimeKeys,
+  encapsulate,
+  decapsulate,
+  encrypt,
+  decrypt,
+} from '@glueeeed/gluechat-crypto'
+
+// 1. Receiver (Bob) generates a key pair
+const [bobsKey] = generateOneTimeKeys(1, 'bob', 'gluechat')
+
+// 2. Sender (Alice) encapsulates using Bob's public key
+// Returns the KEM ciphertext (to be sent over network) and the shared secret
+const { ciphertext, sharedSecret } = encapsulate(bobsKey.pubKey)
+
+// 3. Alice encrypts a message using the shared secret
+const encryptedMsg = encrypt('Hello from post-quantum world!', sharedSecret)
+
+// --- NETWORK TRANSFER: Alice sends `ciphertext` and `encryptedMsg` to Bob ---
+
+// 4. Bob decapsulates the ciphertext using his private key to recover the shared secret
+const bobsSecret = decapsulate(bobsKey.privateKey, ciphertext)
+
+// 5. Bob decrypts the message with the recovered secret
+const decryptedMsg = decrypt(encryptedMsg, bobsSecret)
+console.log(decryptedMsg) // "Hello from post-quantum world!"
+```
+
 ## License
 
 [MIT](./LICENSE)

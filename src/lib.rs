@@ -1,5 +1,6 @@
 use aws_lc_rs::kem::{
-  DecapsulationKey, DecapsulationKeyBytes, EncapsulationKey, EncapsulationKeyBytes, ML_KEM_1024,
+  Ciphertext, DecapsulationKey, DecapsulationKeyBytes, EncapsulationKey,
+  EncapsulationKeyBytes, ML_KEM_1024,
 };
 use aws_lc_rs::rand;
 use chacha20poly1305::{
@@ -26,6 +27,54 @@ pub struct OneTimeKey {
   pub pub_key: String,
   pub private_key: String,
 }
+
+#[napi(object)]
+pub struct EncapsulationResult {
+  pub ciphertext: String,
+  pub shared_secret: String,
+}
+
+#[napi]
+pub fn encapsulate(public_key_base64: String) -> napi::Result<EncapsulationResult> {
+  let pub_key_bytes = general_purpose::STANDARD
+      .decode(&public_key_base64)
+      .map_err(|e| Error::from_reason(format!("Invalid public key base64: {e}")))?;
+
+  let enc_key = EncapsulationKey::new(&ML_KEM_1024, &pub_key_bytes)
+      .map_err(|_| Error::from_reason("Invalid ML-KEM-1024 public key bytes"))?;
+
+  let (ciphertext_bytes, shared_secret) = enc_key
+      .encapsulate()
+      .map_err(|_| Error::from_reason("Encapsulation failed"))?;
+
+  Ok(EncapsulationResult {
+    ciphertext: general_purpose::STANDARD.encode(ciphertext_bytes.as_ref()),
+    shared_secret: general_purpose::STANDARD.encode(shared_secret.as_ref()),
+  })
+}
+
+#[napi]
+pub fn decapsulate(private_key_base64: String, ciphertext_base64: String) -> napi::Result<String> {
+  let priv_key_bytes = general_purpose::STANDARD
+      .decode(&private_key_base64)
+      .map_err(|e| Error::from_reason(format!("Invalid private key base64: {e}")))?;
+
+  let ciphertext_bytes = general_purpose::STANDARD
+      .decode(&ciphertext_base64)
+      .map_err(|e| Error::from_reason(format!("Invalid ciphertext base64: {e}")))?;
+
+  let dec_key = DecapsulationKey::new(&ML_KEM_1024, &priv_key_bytes)
+      .map_err(|_| Error::from_reason("Invalid ML-KEM-1024 private key bytes"))?;
+
+  let ciphertext = Ciphertext::from(ciphertext_bytes.as_slice());
+
+  let shared_secret = dec_key
+      .decapsulate(ciphertext)
+      .map_err(|_| Error::from_reason("Decapsulation failed"))?;
+
+  Ok(general_purpose::STANDARD.encode(shared_secret.as_ref()))
+}
+
 
 #[napi]
 pub fn hello_crypto() -> String {
@@ -161,3 +210,8 @@ pub fn generate_one_time_keys(
 
   Ok(one_time_keys)
 }
+
+
+
+
+
