@@ -248,8 +248,11 @@ jobs:
           name: bindings-${{ matrix.target }}
           path: .
 
-      - name: List packages
-        run: ls -R .
+      - name: Ensure native binary exists in root
+        run: |
+          ls -la
+          # Kopiowanie/upewnienie się, że plik .node jest widoczny w bieżącym katalogu
+          find . -maxdepth 2 -name "*.node" -exec cp {} . \;
         shell: bash
 
       - name: Set up QEMU
