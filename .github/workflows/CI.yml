@@ -264,7 +264,12 @@ jobs:
       - run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
         if: ${{ contains(matrix.target, 'armv7') }}
 
-      - name: Test bindings
+      - name: Test bindings (native)
+        if: ${{ matrix.target == 'x86_64-unknown-linux-gnu' }}
+        run: yarn test
+
+      - name: Test bindings (docker)
+        if: ${{ matrix.target != 'x86_64-unknown-linux-gnu' }}
         uses: tj-actions/docker-run@v2
         with:
           image: ${{ steps.docker.outputs.IMAGE }}
