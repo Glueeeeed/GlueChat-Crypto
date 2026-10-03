@@ -77,7 +77,7 @@ pub fn decapsulate(private_key_base64: String, ciphertext_base64: String) -> nap
 
 #[napi]
 pub fn hello_crypto() -> String {
-  "crypto wrapper works".to_string()
+  "gluechat crypto wrapper works".to_string()
 }
 
 #[napi]
