@@ -11,7 +11,7 @@ import {
 } from '../index'
 
 test('helloCrypto returns expected string', (t) => {
-  t.is(helloCrypto(), 'crypto wrapper works')
+  t.is(helloCrypto(), 'gluechat crypto wrapper works')
 })
 
 test('randomBytes generates correct byte length', (t) => {
