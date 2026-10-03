@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="CargoProjects">
+    <cargoProject FILE="$PROJECT_DIR$/Cargo.toml">
+      <package file="$PROJECT_DIR$">
+        <feature name="default" enabled="true" />
+      </package>
+    </cargoProject>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f4af55a7-34c9-4618-96d2-142e6c5dfe04" name="Changes" comment="Remove Rust crypto wrapper and related dependencies&#10;&#10;Deleted the entire Rust-based cryptographic wrapper, including `Cargo.toml`, `build.rs`, core Rust files, and associated tests. Also removed Node.js dependencies (`package.json` and `package-lock.json`) to clean up unused code and dependencies.">
+      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="13" />
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="RsBuildProfile:dev" />
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Rust File" />
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="SYNC" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Glueeeeed&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Glueeeeed/GlueCrypto.git&quot;,
+    &quot;accountId&quot;: &quot;401ed916-602f-4be5-85d6-6220f6937b64&quot;
+  }
+}</component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="aUETb7c1" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0" />
+      <entry key="S5" value="1.0" />
+      <entry key="S10" value="1.0000000001415459" />
+      <entry key="S30" value="1.0057680867343552" />
+      <entry key="S60" value="1.5134433038491186" />
+      <entry key="M2" value="6.267232128786555" />
+      <entry key="M5" value="27.682654368099225" />
+      <entry key="M10" value="59.31939105438058" />
+      <entry key="M15" value="89.1545911736642" />
+      <entry key="M30" value="177.17653686678509" />
+      <entry key="H1" value="332.87965669067466" />
+      <entry key="H2" value="546.7923140687008" />
+      <entry key="H4" value="754.4610861293686" />
+      <entry key="D1" value="1033.0633756173543" />
+      <entry key="W1" value="1095.1509272032108" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="1.1219358073682369E-195" />
+      <entry key="S5" value="1.1348694050907443E-78" />
+      <entry key="S10" value="1.320985805870822E-39" />
+      <entry key="S30" value="1.7490483000126573E-13" />
+      <entry key="S60" value="6.617032623411829E-7" />
+      <entry key="M2" value="0.0013647836835905488" />
+      <entry key="M5" value="0.13719782382309123" />
+      <entry key="M10" value="0.6811732727623956" />
+      <entry key="M15" value="1.312341871444921" />
+      <entry key="M30" value="3.9296297350156277" />
+      <entry key="H1" value="11.425905256054149" />
+      <entry key="H2" value="23.753341667112245" />
+      <entry key="H4" value="35.93411933451553" />
+      <entry key="D1" value="51.905285315251625" />
+      <entry key="W1" value="55.39318927689708" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="0.8645372313078652" />
+      <entry key="MS500" value="0.9713074955416333" />
+      <entry key="S2" value="0.992748375440308" />
+      <entry key="S5" value="0.9970930153280337" />
+      <entry key="S10" value="0.9985454499473875" />
+      <entry key="S30" value="1.0052824401838216" />
+      <entry key="S60" value="1.5131765444118135" />
+      <entry key="M2" value="6.2683100138094705" />
+      <entry key="M5" value="27.817816995882428" />
+      <entry key="M10" value="59.99549227708555" />
+      <entry key="M15" value="90.46013536484817" />
+      <entry key="M30" value="181.09602447046782" />
+      <entry key="H1" value="344.29155058894645" />
+      <entry key="H2" value="570.5314036828081" />
+      <entry key="H4" value="790.3845034350851" />
+      <entry key="D1" value="1084.9660961345435" />
+      <entry key="W1" value="1150.5437257220267" />
+    </decayedShown>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3IuO8rwaRBcQBDOF9PPoWlVaMqH" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Cargo.Run.executor": "Run",
+    "CidrDebugProfileConversion": "true",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.rust.reset.selective.auto.import": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "main",
+    "javascript.nodejs.core.library.configured.version": "22.23.1",
+    "javascript.nodejs.core.library.typings.version": "22.20.1",
+    "last_opened_file_path": "/home/glueeed/RustroverProjects/untitled",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
+    "org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon": "",
+    "org.rust.disableDetachedFileInspection/home/glueeed/RustroverProjects/untitled/cwd/src/lib.rs": "true",
+    "org.rust.first.attach.projects": "true",
+    "settings.editor.selected.configurable": "com.intellij.ml.llm.agents.skills.settings",
+    "ts.external.directory.path": "/home/glueeed/.cache/JetBrains/RustRover2026.2/ts-go-native-preview/v7.0.0-dev.jetbrains.20260702.4/node_modules/@typescript/native-preview-linux-x64/lib"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="Run" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="command" value="run --package gluechat-crypto --bin gluechat-crypto" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="command" value="run" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="RustProjectSettings">
+    <option name="toolchainHomeDirectory" value="$USER_HOME$/.cargo/bin" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f4af55a7-34c9-4618-96d2-142e6c5dfe04" name="Changes" comment="" />
+      <created>1788610832555</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1788610832555</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <MESSAGE value="chore: clean up `Cargo.lock` by removing unused dependencies" />
+    <MESSAGE value="Remove Rust crypto wrapper and related dependencies&#10;&#10;Deleted the entire Rust-based cryptographic wrapper, including `Cargo.toml`, `build.rs`, core Rust files, and associated tests. Also removed Node.js dependencies (`package.json` and `package-lock.json`) to clean up unused code and dependencies." />
+    <option name="LAST_COMMIT_MESSAGE" value="Remove Rust crypto wrapper and related dependencies&#10;&#10;Deleted the entire Rust-based cryptographic wrapper, including `Cargo.toml`, `build.rs`, core Rust files, and associated tests. Also removed Node.js dependencies (`package.json` and `package-lock.json`) to clean up unused code and dependencies." />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
