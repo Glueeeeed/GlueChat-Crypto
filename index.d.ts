@@ -9,4 +9,20 @@
  */
 export declare const __napiBindingTarget: 'native' | 'wasm32-wasi' | 'wasm32-wasip1'
 
-export declare function plus100(input: number): number
+export declare function decrypt(ciphertext: string, key: string): string
+
+export declare function encrypt(plaintext: string, key: string): string
+
+export declare function generateOneTimeKeys(qty: number, accountName: string, prefix: string): Array<OneTimeKey>
+
+export declare function helloCrypto(): string
+
+export interface OneTimeKey {
+  accountName: string
+  secretName: string
+  id: string
+  pubKey: string
+  privateKey: string
+}
+
+export declare function randomBytes(length: number): Array<number>
