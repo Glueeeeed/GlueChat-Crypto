@@ -1,6 +1,6 @@
 {
   "name": "@glueeeed/gluechat-crypto",
-  "version": "1.0.2",
+  "version": "1.0.1",
   "description": "Crypto module written in Rust for GlueChat",
   "main": "index.js",
   "repository": {
