@@ -22,9 +22,22 @@ export interface EncapsulationResult {
 
 export declare function encrypt(plaintext: string, key: string): string
 
+export declare function generateKemKeypair(length: KemLength): KeyPair
+
 export declare function generateOneTimeKeys(qty: number, accountName: string, prefix: string): Array<OneTimeKey>
 
 export declare function helloCrypto(): string
+
+export declare const enum KemLength {
+  MlKem1024 = 0,
+  MlKem768 = 1,
+  MlKem512 = 2,
+}
+
+export interface KeyPair {
+  privateKey: string
+  publicKey: string
+}
 
 export interface OneTimeKey {
   accountName: string
@@ -34,4 +47,4 @@ export interface OneTimeKey {
   privateKey: string
 }
 
-export declare function randomBytes(length: number): Array<number>
+export declare function randomBytes(length: number): Uint8Array

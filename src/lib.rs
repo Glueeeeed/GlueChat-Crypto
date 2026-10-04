@@ -1,21 +1,22 @@
 use aws_lc_rs::kem::{
-  Ciphertext, DecapsulationKey, DecapsulationKeyBytes, EncapsulationKey, EncapsulationKeyBytes,
-  ML_KEM_1024,
+  Algorithm, Ciphertext, DecapsulationKey, DecapsulationKeyBytes, EncapsulationKey,
+  EncapsulationKeyBytes, ML_KEM_1024, ML_KEM_512, ML_KEM_768,
 };
 use aws_lc_rs::rand;
 use chacha20poly1305::{
   aead::{Aead, KeyInit},
   XChaCha20Poly1305, XNonce,
 };
+use napi::bindgen_prelude::Uint8Array;
 use napi::Error;
 use napi_derive::napi;
-use napi::bindgen_prelude::ArrayBuffer;
 
 use base64::engine::general_purpose;
 use base64::Engine;
 use hex::encode as hex_encode;
 
-struct KeyPair {
+#[napi(object)]
+pub struct KeyPair {
   pub private_key: String,
   pub public_key: String,
 }
@@ -89,11 +90,10 @@ pub fn hello_crypto() -> String {
 }
 
 #[napi]
-
-pub fn random_bytes(length: u32) -> napi::Result<ArrayBuffer> {
+pub fn random_bytes(length: u32) -> Uint8Array {
   let mut bytes = vec![0u8; length as usize];
-  rand::fill(&mut bytes[..]).map_err(|_| Error::from_reason("Random generation failed"))?;
-  Ok(ArrayBuffer::from(bytes))
+  let _ = rand::fill(&mut bytes[..]);
+  Uint8Array::from(bytes)
 }
 
 #[napi]
@@ -181,9 +181,6 @@ pub fn generate_one_time_keys(
     rand::fill(&mut key_id_bytes).map_err(|_| Error::from_reason("Random generation failed"))?;
     let key_id: String = hex_encode(key_id_bytes);
 
-    // decapsulation_key means the private key
-    // encapsulation_key means the public key
-
     let decapsulation_key: DecapsulationKey = DecapsulationKey::generate(&ML_KEM_1024)
       .map_err(|_| Error::from_reason("Failed to generate pair keys"))?;
     let encapsulation_key: EncapsulationKey = decapsulation_key
@@ -225,24 +222,26 @@ pub fn generate_kem_keypair(length: KemLength) -> napi::Result<KeyPair> {
     KemLength::MlKem768 => &ML_KEM_768,
     KemLength::MlKem512 => &ML_KEM_512,
   };
-
   let decapsulation_key: DecapsulationKey = DecapsulationKey::generate(algorithm)
-      .map_err(|_| Error::from_reason("Failed to generate pair keys"))?;
+    .map_err(|_| Error::from_reason("Failed to generate pair keys"))?;
 
   let encapsulation_key: EncapsulationKey = decapsulation_key
-      .encapsulation_key()
-      .map_err(|_| Error::from_reason("Failed to generate encapsulation key"))?;
+    .encapsulation_key()
+    .map_err(|_| Error::from_reason("Failed to generate encapsulation key"))?;
 
   let pub_key_bytes: EncapsulationKeyBytes = encapsulation_key
-      .key_bytes()
-      .map_err(|_| Error::from_reason("Failed to convert public key to bytes"))?;
+    .key_bytes()
+    .map_err(|_| Error::from_reason("Failed to convert public key to bytes"))?;
 
   let private_key_bytes: DecapsulationKeyBytes = decapsulation_key
-      .key_bytes()
-      .map_err(|_| Error::from_reason("Failed to convert private key to bytes"))?;
+    .key_bytes()
+    .map_err(|_| Error::from_reason("Failed to convert private key to bytes"))?;
 
   let private_key: String = general_purpose::STANDARD.encode(private_key_bytes.as_ref());
   let public_key: String = general_purpose::STANDARD.encode(pub_key_bytes.as_ref());
 
-  Ok(KeyPair { private_key, public_key })
+  Ok(KeyPair {
+    private_key,
+    public_key,
+  })
 }
