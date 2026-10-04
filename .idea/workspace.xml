@@ -11,14 +11,17 @@
     </cargoProject>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f4af55a7-34c9-4618-96d2-142e6c5dfe04" name="Changes" comment="Reintroduce Rust crypto wrapper with updated dependencies and new encryption functionalities" />
+    <list default="true" id="f4af55a7-34c9-4618-96d2-142e6c5dfe04" name="Changes" comment="Reintroduce Rust crypto wrapper with updated dependencies and new encryption functionalities">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib.rs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="50" />
+    <option name="cachedIndexableFilesCount" value="478" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="RsBuildProfile:dev" />
@@ -40,12 +43,12 @@
     &quot;assignee&quot;: &quot;Glueeeeed&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/Glueeeeed/GlueCrypto.git&quot;,
-    &quot;accountId&quot;: &quot;401ed916-602f-4be5-85d6-6220f6937b64&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Glueeeeed/GlueChat-Crypto.git",
+    "accountId": "401ed916-602f-4be5-85d6-6220f6937b64"
   }
-}</component>
+}]]></component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="aUETb7c1" />
   </component>
@@ -55,61 +58,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0" />
-      <entry key="S5" value="1.0" />
-      <entry key="S10" value="1.0000000008955734" />
-      <entry key="S30" value="1.012640552071453" />
-      <entry key="S60" value="1.8279779938802385" />
-      <entry key="M2" value="8.378932307765051" />
-      <entry key="M5" value="35.94381364201377" />
-      <entry key="M10" value="76.52964313251135" />
-      <entry key="M15" value="114.37599984023376" />
-      <entry key="M30" value="219.20796886567317" />
-      <entry key="H1" value="407.1047181542491" />
-      <entry key="H2" value="711.5766681284346" />
-      <entry key="H4" value="1075.5546440422065" />
-      <entry key="D1" value="1674.536282775155" />
-      <entry key="W1" value="1825.068767527786" />
+      <entry key="MS100" value="1.0612139266737572" />
+      <entry key="MS500" value="1.6563370161389583" />
+      <entry key="S2" value="3.0639582587041714" />
+      <entry key="S5" value="4.377271461195523" />
+      <entry key="S10" value="6.973862211741647" />
+      <entry key="S30" value="16.310200164995063" />
+      <entry key="S60" value="26.473440949432504" />
+      <entry key="M2" value="46.588056666552326" />
+      <entry key="M5" value="105.44014691259545" />
+      <entry key="M10" value="175.34716930396354" />
+      <entry key="M15" value="228.2261399919251" />
+      <entry key="M30" value="353.3584588203933" />
+      <entry key="H1" value="555.9139116273686" />
+      <entry key="H2" value="873.2570385135721" />
+      <entry key="H4" value="1252.5905434241565" />
+      <entry key="D1" value="1882.873261590944" />
+      <entry key="W1" value="2042.4132491106236" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="3.6308936793773166E-218" />
-      <entry key="S2" value="4.365192325552059E-55" />
-      <entry key="S5" value="1.8030233588129873E-22" />
-      <entry key="S10" value="1.3427670531645908E-11" />
-      <entry key="S30" value="2.3778196725489817E-4" />
-      <entry key="S60" value="0.01572976367333782" />
-      <entry key="M2" value="0.14188151658908532" />
-      <entry key="M5" value="0.6490030105824967" />
-      <entry key="M10" value="1.230922891802777" />
-      <entry key="M15" value="1.5953224168843199" />
-      <entry key="M30" value="2.2779322436737166" />
-      <entry key="H1" value="4.490041386654517" />
-      <entry key="H2" value="12.514014796305615" />
-      <entry key="H4" value="26.037629521416765" />
-      <entry key="D1" value="51.91976619331038" />
-      <entry key="W1" value="58.76600810764367" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="3.5512070769400633E-100" />
+      <entry key="S5" value="1.6602950658504088E-40" />
+      <entry key="S10" value="1.3000196356647955E-20" />
+      <entry key="S30" value="2.8314003318271845E-7" />
+      <entry key="S60" value="7.07746081346845E-4" />
+      <entry key="M2" value="0.03878202796549196" />
+      <entry key="M5" value="0.519102732228806" />
+      <entry key="M10" value="1.4177757097691488" />
+      <entry key="M15" value="2.070715147340937" />
+      <entry key="M30" value="3.24071094622523" />
+      <entry key="H1" value="5.639935371995752" />
+      <entry key="H2" value="13.51894442445419" />
+      <entry key="H4" value="27.055105658981386" />
+      <entry key="D1" value="53.59941115197831" />
+      <entry key="W1" value="60.714285922616746" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9395227492140118" />
-      <entry key="MS500" value="0.9876008614453725" />
-      <entry key="S2" value="0.9968856972203758" />
-      <entry key="S5" value="0.9987531130852756" />
-      <entry key="S10" value="0.999376362987787" />
-      <entry key="S30" value="1.0126564534895" />
-      <entry key="S60" value="1.8430879973027854" />
-      <entry key="M2" value="8.518385520676466" />
-      <entry key="M5" value="36.588580050407636" />
-      <entry key="M10" value="77.75638277764511" />
-      <entry key="M15" value="115.96748641700704" />
-      <entry key="M30" value="221.48274775049504" />
-      <entry key="H1" value="411.5906668698509" />
-      <entry key="H2" value="724.0839328538615" />
-      <entry key="H4" value="1101.5849250742574" />
-      <entry key="D1" value="1726.4535567119256" />
-      <entry key="W1" value="1883.8343717155572" />
+      <entry key="MS100" value="0.8074480262258766" />
+      <entry key="MS500" value="1.5481259394832656" />
+      <entry key="S2" value="3.0025283880388534" />
+      <entry key="S5" value="4.336979099135998" />
+      <entry key="S10" value="6.932288347765265" />
+      <entry key="S30" value="16.268597900541554" />
+      <entry key="S60" value="26.434375852856704" />
+      <entry key="M2" value="46.59086892170614" />
+      <entry key="M5" value="105.9302952786844" />
+      <entry key="M10" value="176.7428626601268" />
+      <entry key="M15" value="230.27905122334732" />
+      <entry key="M30" value="356.58765951118966" />
+      <entry key="H1" value="561.5453357803194" />
+      <entry key="H2" value="886.7671096026424" />
+      <entry key="H4" value="1279.6372360702912" />
+      <entry key="D1" value="1936.469970769379" />
+      <entry key="W1" value="2103.1270992778914" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -121,36 +124,36 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Cargo.Run.executor&quot;: &quot;Run&quot;,
-    &quot;CidrDebugProfileConversion&quot;: &quot;true&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.rust.reset.selective.auto.import&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;22.23.1&quot;,
-    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;22.20.1&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/glueeed/RustroverProjects/untitled&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;org.rust.cargo.project.model.PROJECT_DISCOVERY&quot;: &quot;true&quot;,
-    &quot;org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon&quot;: &quot;&quot;,
-    &quot;org.rust.disableDetachedFileInspection/home/glueeed/RustroverProjects/untitled/cwd/src/lib.rs&quot;: &quot;true&quot;,
-    &quot;org.rust.first.attach.projects&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/home/glueeed/.cache/JetBrains/RustRover2026.2/ts-go-native-preview/v7.0.0-dev.jetbrains.20260702.4/node_modules/@typescript/native-preview-linux-x64/lib&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Cargo.Run.executor": "Run",
+    "CidrDebugProfileConversion": "true",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.rust.reset.selective.auto.import": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "main",
+    "javascript.nodejs.core.library.configured.version": "22.23.1",
+    "javascript.nodejs.core.library.typings.version": "22.20.1",
+    "last_opened_file_path": "/home/glueeed/RustroverProjects/untitled",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
+    "org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon": "",
+    "org.rust.disableDetachedFileInspection/home/glueeed/RustroverProjects/untitled/cwd/src/lib.rs": "true",
+    "org.rust.first.attach.projects": "true",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "ts.external.directory.path": "/home/glueeed/.local/share/JetBrains/Toolbox/apps/rustrover/plugins/javascript-plugin/jsLanguageServicesImpl/external"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="Run" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
       <option name="command" value="run --package gluechat-crypto --bin gluechat-crypto" />

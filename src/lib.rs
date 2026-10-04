@@ -36,6 +36,13 @@ pub struct EncapsulationResult {
 }
 
 #[napi]
+pub enum KemLength {
+  MlKem1024,
+  MlKem768,
+  MlKem512,
+}
+
+#[napi]
 pub fn encapsulate(public_key_base64: String) -> napi::Result<EncapsulationResult> {
   let pub_key_bytes = general_purpose::STANDARD
     .decode(&public_key_base64)
@@ -209,4 +216,33 @@ pub fn generate_one_time_keys(
   }
 
   Ok(one_time_keys)
+}
+
+#[napi]
+pub fn generate_kem_keypair(length: KemLength) -> napi::Result<KeyPair> {
+  let algorithm: &'static Algorithm = match length {
+    KemLength::MlKem1024 => &ML_KEM_1024,
+    KemLength::MlKem768 => &ML_KEM_768,
+    KemLength::MlKem512 => &ML_KEM_512,
+  };
+
+  let decapsulation_key: DecapsulationKey = DecapsulationKey::generate(algorithm)
+      .map_err(|_| Error::from_reason("Failed to generate pair keys"))?;
+
+  let encapsulation_key: EncapsulationKey = decapsulation_key
+      .encapsulation_key()
+      .map_err(|_| Error::from_reason("Failed to generate encapsulation key"))?;
+
+  let pub_key_bytes: EncapsulationKeyBytes = encapsulation_key
+      .key_bytes()
+      .map_err(|_| Error::from_reason("Failed to convert public key to bytes"))?;
+
+  let private_key_bytes: DecapsulationKeyBytes = decapsulation_key
+      .key_bytes()
+      .map_err(|_| Error::from_reason("Failed to convert private key to bytes"))?;
+
+  let private_key: String = general_purpose::STANDARD.encode(private_key_bytes.as_ref());
+  let public_key: String = general_purpose::STANDARD.encode(pub_key_bytes.as_ref());
+
+  Ok(KeyPair { private_key, public_key })
 }
