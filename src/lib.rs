@@ -9,6 +9,7 @@ use chacha20poly1305::{
 };
 use napi::Error;
 use napi_derive::napi;
+use napi::bindgen_prelude::ArrayBuffer;
 
 use base64::engine::general_purpose;
 use base64::Engine;
@@ -82,10 +83,10 @@ pub fn hello_crypto() -> String {
 
 #[napi]
 
-pub fn random_bytes(length: u32) -> napi::Result<Vec<u8>> {
+pub fn random_bytes(length: u32) -> napi::Result<ArrayBuffer> {
   let mut bytes = vec![0u8; length as usize];
   rand::fill(&mut bytes[..]).map_err(|_| Error::from_reason("Random generation failed"))?;
-  Ok(bytes)
+  Ok(ArrayBuffer::from(bytes))
 }
 
 #[napi]
