@@ -5,9 +5,8 @@
 ## Features
 
 - **Symmetric Encryption & Decryption**: Authenticated encryption using **XChaCha20-Poly1305** (AEAD) with 24-byte nonces and 32-byte keys.
-- **Post-Quantum Key Exchange (ML-KEM-1024)**: One-Time Key (OTK) pair generation based on NIST post-quantum standard ML-KEM-1024 (via `aws-lc-rs`).
+- **ML-KEM Support**: Generate and encapsulate/decapsulate keys using ML-KEM based on NIST post-quantum standard (via `aws-lc-rs`).
 - **Native Performance**: Implemented in Rust with zero-overhead Node-API (`napi-rs`) bindings.
-
 --- 
 
 ## Installation
@@ -51,14 +50,14 @@ console.log('Decrypted message:', decrypted) // "Hello GlueChat!"
 
 ---
 
-### 2. Post-Quantum One-Time Keys (ML-KEM-1024)
+### 2. Post-Quantum One-Time Keys (ML-KEM-1024, ML-KEM-768, ML-KEM-512)
 
-Generate batches of One-Time Keys (OTKs) for user accounts using post-quantum key encapsulation (ML-KEM-1024).
+Generate batches of One-Time Keys (OTKs) for user accounts using post-quantum key encapsulation (ML-KEM-1024, ML-KEM-768, ML-KEM-512).
 
 ```typescript
 import { generateOneTimeKeys, OneTimeKey } from '@glueeeed/gluechat-crypto'
 
-const keys: OneTimeKey[] = generateOneTimeKeys(5, 'alice', 'device1')
+const keys = generateOneTimeKeys(KemLength.MlKem1024, 2, 'alice', 'device1');  // 2 OTKs for 'alice' on 'device1' ML-KEM-1024
 
 console.log(keys)
 /*
@@ -84,31 +83,34 @@ Generate cryptographically secure random bytes.
 ```typescript
 import { randomBytes } from '@glueeeed/gluechat-crypto'
 
-const bytes: number[] = randomBytes(32)
-const buffer = Buffer.from(bytes)
+const bytes: Uint8Array<ArrayBufferLike> = randomBytes(32);
+const buffer = Buffer.from(bytes);
 ```
 
 ---
 
-### 4. Encapsulation & Decapsulation (ML-KEM-1024)
+### 4. Encapsulation & Decapsulation (ML-KEM-1024, ML-KEM-768, ML-KEM-512)
 
-Use ML-KEM-1024 post-quantum key encapsulation to establish a shared secret between two parties.
+Use ML-KEM-1024, ML-KEM-768, ML-KEM-512 post-quantum key encapsulation to establish a shared secret between two parties.
 
 ```typescript
 import {
-  generateOneTimeKeys,
-  encapsulate,
-  decapsulate,
-  encrypt,
-  decrypt,
+    generateOneTimeKeys,
+    encapsulate,
+    decapsulate,
+    encrypt,
+    decrypt,
+    generateKemKeypair,
+    KemLength
 } from '@glueeeed/gluechat-crypto'
 
+
 // 1. Receiver (Bob) generates a key pair
-const [bobsKey] = generateOneTimeKeys(1, 'bob', 'gluechat')
+const bobsKey = generateKemKeypair(KemLength.MlKem1024);
 
 // 2. Sender (Alice) encapsulates using Bob's public key
 // Returns the KEM ciphertext (to be sent over network) and the shared secret
-const { ciphertext, sharedSecret } = encapsulate(bobsKey.pubKey)
+const {ciphertext, sharedSecret} = encapsulate(KemLength.MlKem1024,bobsKey.pubKey)
 
 // 3. Alice encrypts a message using the shared secret
 const encryptedMsg = encrypt('Hello from post-quantum world!', sharedSecret)
@@ -116,11 +118,21 @@ const encryptedMsg = encrypt('Hello from post-quantum world!', sharedSecret)
 // --- NETWORK TRANSFER: Alice sends `ciphertext` and `encryptedMsg` to Bob ---
 
 // 4. Bob decapsulates the ciphertext using his private key to recover the shared secret
-const bobsSecret = decapsulate(bobsKey.privateKey, ciphertext)
+const bobsSecret = decapsulate(KemLength.MlKem1024,bobsKey.privateKey, ciphertext)
 
 // 5. Bob decrypts the message with the recovered secret
 const decryptedMsg = decrypt(encryptedMsg, bobsSecret)
 console.log(decryptedMsg) // "Hello from post-quantum world!"
+```
+
+---
+
+### 5. Generate a Key Pair (ML-KEM-1024, ML-KEM-768, ML-KEM-512)
+
+```typescript
+import { generateKemKeypair, KemLength } from '@glueeeed/gluechat-crypto'
+
+const keypair = generateKemKeypair(KemLength.MlKem1024) // You can use KemLength.MlKem768 or KemLength.MlKem512
 ```
 
 ## License

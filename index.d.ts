@@ -9,11 +9,11 @@
  */
 export declare const __napiBindingTarget: 'native' | 'wasm32-wasi' | 'wasm32-wasip1'
 
-export declare function decapsulate(privateKeyBase64: string, ciphertextBase64: string): string
+export declare function decapsulate(length: KemLength, privateKeyBase64: string, ciphertextBase64: string): string
 
 export declare function decrypt(ciphertext: string, key: string): string
 
-export declare function encapsulate(publicKeyBase64: string): EncapsulationResult
+export declare function encapsulate(length: KemLength, publicKeyBase64: string): EncapsulationResult
 
 export interface EncapsulationResult {
   ciphertext: string
@@ -24,7 +24,7 @@ export declare function encrypt(plaintext: string, key: string): string
 
 export declare function generateKemKeypair(length: KemLength): KeyPair
 
-export declare function generateOneTimeKeys(qty: number, accountName: string, prefix: string): Array<OneTimeKey>
+export declare function generateOneTimeKeys(length: KemLength, qty: number, accountName: string, prefix: string): Array<OneTimeKey>
 
 export declare function helloCrypto(): string
 

@@ -44,13 +44,22 @@ pub enum KemLength {
 }
 
 #[napi]
-pub fn encapsulate(public_key_base64: String) -> napi::Result<EncapsulationResult> {
+pub fn encapsulate(
+  length: KemLength,
+  public_key_base64: String,
+) -> napi::Result<EncapsulationResult> {
+  let algorithm: &'static Algorithm = match length {
+    KemLength::MlKem1024 => &ML_KEM_1024,
+    KemLength::MlKem768 => &ML_KEM_768,
+    KemLength::MlKem512 => &ML_KEM_512,
+  };
+
   let pub_key_bytes = general_purpose::STANDARD
     .decode(&public_key_base64)
     .map_err(|e| Error::from_reason(format!("Invalid public key base64: {e}")))?;
 
-  let enc_key = EncapsulationKey::new(&ML_KEM_1024, &pub_key_bytes)
-    .map_err(|_| Error::from_reason("Invalid ML-KEM-1024 public key bytes"))?;
+  let enc_key = EncapsulationKey::new(algorithm, &pub_key_bytes)
+    .map_err(|_| Error::from_reason("Invalid public key bytes"))?;
 
   let (ciphertext_bytes, shared_secret) = enc_key
     .encapsulate()
@@ -63,7 +72,17 @@ pub fn encapsulate(public_key_base64: String) -> napi::Result<EncapsulationResul
 }
 
 #[napi]
-pub fn decapsulate(private_key_base64: String, ciphertext_base64: String) -> napi::Result<String> {
+pub fn decapsulate(
+  length: KemLength,
+  private_key_base64: String,
+  ciphertext_base64: String,
+) -> napi::Result<String> {
+  let algorithm: &'static Algorithm = match length {
+    KemLength::MlKem1024 => &ML_KEM_1024,
+    KemLength::MlKem768 => &ML_KEM_768,
+    KemLength::MlKem512 => &ML_KEM_512,
+  };
+
   let priv_key_bytes = general_purpose::STANDARD
     .decode(&private_key_base64)
     .map_err(|e| Error::from_reason(format!("Invalid private key base64: {e}")))?;
@@ -72,8 +91,8 @@ pub fn decapsulate(private_key_base64: String, ciphertext_base64: String) -> nap
     .decode(&ciphertext_base64)
     .map_err(|e| Error::from_reason(format!("Invalid ciphertext base64: {e}")))?;
 
-  let dec_key = DecapsulationKey::new(&ML_KEM_1024, &priv_key_bytes)
-    .map_err(|_| Error::from_reason("Invalid ML-KEM-1024 private key bytes"))?;
+  let dec_key = DecapsulationKey::new(algorithm, &priv_key_bytes)
+    .map_err(|_| Error::from_reason("Invalid private key bytes"))?;
 
   let ciphertext = Ciphertext::from(ciphertext_bytes.as_slice());
 
@@ -169,10 +188,17 @@ pub fn decrypt(ciphertext: String, key: String) -> napi::Result<String> {
 
 #[napi]
 pub fn generate_one_time_keys(
+  length: KemLength,
   qty: i32,
   account_name: String,
   prefix: String,
 ) -> napi::Result<Vec<OneTimeKey>> {
+  let algorithm: &'static Algorithm = match length {
+    KemLength::MlKem1024 => &ML_KEM_1024,
+    KemLength::MlKem768 => &ML_KEM_768,
+    KemLength::MlKem512 => &ML_KEM_512,
+  };
+
   let mut one_time_keys: Vec<OneTimeKey> = Vec::with_capacity(qty as usize);
   let mut i: i32 = 0;
 
@@ -181,7 +207,7 @@ pub fn generate_one_time_keys(
     rand::fill(&mut key_id_bytes).map_err(|_| Error::from_reason("Random generation failed"))?;
     let key_id: String = hex_encode(key_id_bytes);
 
-    let decapsulation_key: DecapsulationKey = DecapsulationKey::generate(&ML_KEM_1024)
+    let decapsulation_key: DecapsulationKey = DecapsulationKey::generate(algorithm)
       .map_err(|_| Error::from_reason("Failed to generate pair keys"))?;
     let encapsulation_key: EncapsulationKey = decapsulation_key
       .encapsulation_key()

@@ -35,48 +35,50 @@ test('encrypt and decrypt payload correctly', (t) => {
 })
 
 test('generateOneTimeKeys creates requested amount of keys', (t) => {
-  const keys = generateOneTimeKeys(2, 'user1', 'prefix');
+  const keys = generateOneTimeKeys(KemLength.MlKem1024,2, 'user1', 'prefix');
   t.is(keys.length, 2);
   t.is(keys[0].accountName, 'gluechat_user1');
   t.true(keys[0].secretName.startsWith('prefix-otk-'));
   t.true(typeof keys[0].pubKey === 'string' && keys[0].pubKey.length > 0);
   t.true(typeof keys[0].privateKey === 'string' && keys[0].privateKey.length > 0);
+  t.is(keys[0].pubKey.length, 2092);
+  t.is(keys[0].privateKey.length, 4224);
 })
 
 test('encapsulate and decapsulate produce the same shared secret', (t) => {
 
-  const [bobsKey] = generateOneTimeKeys(1, 'bob', 'gluechat');
+  const bobsKey = generateKemKeypair(KemLength.MlKem768);
 
-  const { ciphertext, sharedSecret } = encapsulate(bobsKey.pubKey);
+  const { ciphertext, sharedSecret } = encapsulate(KemLength.MlKem768,bobsKey.publicKey);
 
   t.true(typeof ciphertext === 'string' && ciphertext.length > 0);
   t.true(typeof sharedSecret === 'string' && sharedSecret.length > 0);
 
 
-  const bobsSecret = decapsulate(bobsKey.privateKey, ciphertext);
+  const bobsSecret = decapsulate(KemLength.MlKem768,bobsKey.privateKey, ciphertext);
 
   t.is(sharedSecret, bobsSecret);
 })
 
 test('decapsulate with wrong private key produces different shared secret', (t) => {
-  const [bobsKey] = generateOneTimeKeys(1, 'bob', 'gluechat');
-  const [evesKey] = generateOneTimeKeys(1, 'eve', 'gluechat');
+  const bobsKey = generateKemKeypair(KemLength.MlKem512);
+  const evesKey = generateKemKeypair(KemLength.MlKem512);
 
-  const { sharedSecret, ciphertext } = encapsulate(bobsKey.pubKey);
+  const { sharedSecret, ciphertext } = encapsulate(KemLength.MlKem512, bobsKey.publicKey);
 
-  const evesSecret = decapsulate(evesKey.privateKey, ciphertext);
+  const evesSecret = decapsulate(KemLength.MlKem512, evesKey.privateKey, ciphertext);
 
   t.not(sharedSecret, evesSecret);
 })
 
 test('encrypt and decrypt using ML-KEM shared secret', (t) => {
-  const [receiverKey] = generateOneTimeKeys(1, 'receiver', 'gluechat');
+  const receiverKey = generateKemKeypair(KemLength.MlKem512);
 
-  const { ciphertext, sharedSecret } = encapsulate(receiverKey.pubKey);
+  const { ciphertext, sharedSecret } = encapsulate(KemLength.MlKem512,receiverKey.publicKey);
   const message = 'Post-Quantum GlueChat Message';
   const encryptedPayload = encrypt(message, sharedSecret);
 
-  const recoveredSecret = decapsulate(receiverKey.privateKey, ciphertext);
+  const recoveredSecret = decapsulate(KemLength.MlKem512,receiverKey.privateKey, ciphertext);
   const decryptedMessage = decrypt(encryptedPayload, recoveredSecret);
 
   t.is(decryptedMessage, message);
