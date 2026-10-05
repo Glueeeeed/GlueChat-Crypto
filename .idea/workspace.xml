@@ -12,11 +12,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f4af55a7-34c9-4618-96d2-142e6c5dfe04" name="Changes" comment="Reintroduce Rust crypto wrapper with updated dependencies and new encryption functionalities">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/CI.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/CI.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/__test__/index.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/__test__/index.spec.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/index.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -25,7 +24,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="478" />
+    <option name="cachedIndexableFilesCount" value="51" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="RsBuildProfile:dev" />
@@ -62,61 +61,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.886606000373278" />
-      <entry key="MS500" value="4.600286491721693" />
-      <entry key="S2" value="7.677760439722464" />
-      <entry key="S5" value="11.595432670093214" />
-      <entry key="S10" value="17.418091962243214" />
-      <entry key="S30" value="30.98544060889135" />
-      <entry key="S60" value="38.315825363509504" />
-      <entry key="M2" value="43.21221740495924" />
-      <entry key="M5" value="52.6933923076524" />
-      <entry key="M10" value="83.00029848893521" />
-      <entry key="M15" value="120.19611687594681" />
-      <entry key="M30" value="238.18313536594442" />
-      <entry key="H1" value="481.1528971068332" />
-      <entry key="H2" value="923.382484347929" />
-      <entry key="H4" value="1530.2545649174795" />
-      <entry key="D1" value="2729.6123175897524" />
-      <entry key="W1" value="3069.5913165557167" />
+      <entry key="MS100" value="1.0007253921923422" />
+      <entry key="MS500" value="1.3145016545380848" />
+      <entry key="S2" value="3.414379265623583" />
+      <entry key="S5" value="5.760432043015928" />
+      <entry key="S10" value="7.394578929910527" />
+      <entry key="S30" value="15.364877193800785" />
+      <entry key="S60" value="34.71250381658974" />
+      <entry key="M2" value="63.00355291432724" />
+      <entry key="M5" value="95.57088516324364" />
+      <entry key="M10" value="120.38414590180234" />
+      <entry key="M15" value="146.31486594525856" />
+      <entry key="M30" value="242.82011308592257" />
+      <entry key="H1" value="468.4476751249813" />
+      <entry key="H2" value="906.9117526740628" />
+      <entry key="H4" value="1533.8664687813427" />
+      <entry key="D1" value="2818.0675621013556" />
+      <entry key="W1" value="3189.526389800856" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="3.6176810852108157E-13" />
-      <entry key="MS500" value="0.0032485238217769756" />
-      <entry key="S2" value="0.23873797947747138" />
-      <entry key="S5" value="0.5638565186246387" />
-      <entry key="S10" value="0.7509038011787119" />
-      <entry key="S30" value="0.9089251089658752" />
-      <entry key="S60" value="0.9533756471166239" />
-      <entry key="M2" value="0.9766226510823786" />
-      <entry key="M5" value="1.100864061170187" />
-      <entry key="M10" value="1.9689740424978104" />
-      <entry key="M15" value="3.166985147548934" />
-      <entry key="M30" value="7.055256391467919" />
-      <entry key="H1" value="14.601164828852255" />
-      <entry key="H2" value="26.975746589784183" />
-      <entry key="H4" value="45.20818238187502" />
-      <entry key="D1" value="86.87625911398764" />
-      <entry key="W1" value="99.62627107534615" />
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="2.6313527619743262E-260" />
+      <entry key="S5" value="1.4725553557075052E-104" />
+      <entry key="S10" value="1.2134889186587164E-52" />
+      <entry key="S30" value="4.950836737317494E-18" />
+      <entry key="S60" value="2.2250475999430725E-9" />
+      <entry key="M2" value="4.718070420845283E-5" />
+      <entry key="M5" value="0.02067039350221115" />
+      <entry key="M10" value="0.2698034607010841" />
+      <entry key="M15" value="0.8417524260614497" />
+      <entry key="M30" value="3.6373238971385042" />
+      <entry key="H1" value="10.483881203592082" />
+      <entry key="H2" value="22.858133612592464" />
+      <entry key="H4" value="41.615076108442956" />
+      <entry key="D1" value="85.68537855513021" />
+      <entry key="W1" value="99.4300215671817" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.831941501818503" />
-      <entry key="MS500" value="4.572229948812791" />
-      <entry key="S2" value="7.838068210766362" />
-      <entry key="S5" value="12.083268602484193" />
-      <entry key="S10" value="18.116338722152896" />
-      <entry key="S30" value="31.8717376578835" />
-      <entry key="S60" value="39.2569929419951" />
-      <entry key="M2" value="44.18246965138213" />
-      <entry key="M5" value="53.790114279624056" />
-      <entry key="M10" value="84.96092726221863" />
-      <entry key="M15" value="123.3511615610057" />
-      <entry key="M30" value="245.2215697756789" />
-      <entry key="H1" value="495.73604763410447" />
-      <entry key="H2" value="950.3419842597732" />
-      <entry key="H4" value="1575.449380672048" />
-      <entry key="D1" value="2816.4843418305913" />
-      <entry key="W1" value="3169.2168946030347" />
+      <entry key="MS100" value="0.9801307578687076" />
+      <entry key="MS500" value="1.3067771126642491" />
+      <entry key="S2" value="3.353619658841347" />
+      <entry key="S5" value="5.699766258830845" />
+      <entry key="S10" value="7.353222406773053" />
+      <entry key="S30" value="15.347434039311963" />
+      <entry key="S60" value="34.70269648531894" />
+      <entry key="M2" value="62.99813095187917" />
+      <entry key="M5" value="95.58906615863854" />
+      <entry key="M10" value="120.65155108324964" />
+      <entry key="M15" value="147.15259627070412" />
+      <entry key="M30" value="246.4483339516809" />
+      <entry key="H1" value="478.91840488811556" />
+      <entry key="H2" value="929.7560106743092" />
+      <entry key="H4" value="1575.4691861016483" />
+      <entry key="D1" value="2903.748754731386" />
+      <entry key="W1" value="3288.955718404436" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -158,7 +157,7 @@
     "org.rust.first.attach.projects": "true",
     "settings.editor.selected.configurable": "preferences.pluginManager",
     "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "/home/glueeed/.local/share/JetBrains/Toolbox/apps/rustrover/plugins/javascript-plugin/jsLanguageServicesImpl/external"
+    "ts.external.directory.path": "/home/glueeed/.cache/JetBrains/RustRover2026.2/ts-go-native-preview/v7.0.0-dev.jetbrains.20260702.4/node_modules/@typescript/native-preview-linux-x64/lib"
   }
 }]]></component>
   <component name="RunManager">

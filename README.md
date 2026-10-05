@@ -29,24 +29,23 @@ pnpm add @glueeeed/gluechat-crypto
 
 ### 1. Symmetric Encryption & Decryption (XChaCha20-Poly1305)
 
-Encrypt and decrypt messages using a 32-byte base64-encoded key. Ciphertext output follows the `ciphertext_base64::nonce_base64` format.
+Encrypt and decrypt messages using a 32-byte key (`Uint8Array`). Ciphertext output contains the 24-byte nonce followed by the encrypted payload.
 
 ```typescript
 import { encrypt, decrypt, randomBytes } from '@glueeeed/gluechat-crypto'
 
-// 1. Generate a random 32-byte key (Base64)
-const rawKey = randomBytes(32)
-const keyBase64 = Buffer.from(rawKey).toString('base64')
+// 1. Generate a random 32-byte key
+const key = randomBytes(32)
 
-const message = 'Hello GlueChat!'
+const message = Buffer.from('Hello GlueChat!')
 
 // 2. Encrypt plaintext
-const ciphertext = encrypt(message, keyBase64)
-console.log('Encrypted payload:', ciphertext) // "<base64_payload>::<base64_nonce>"
+const ciphertext = encrypt(message, key)
+console.log('Encrypted payload:', ciphertext) // Uint8Array [nonce (24 bytes) + ciphertext]
 
 // 3. Decrypt ciphertext
-const decrypted = decrypt(ciphertext, keyBase64)
-console.log('Decrypted message:', decrypted) // "Hello GlueChat!"
+const decrypted = decrypt(ciphertext, key)
+console.log('Decrypted message:', Buffer.from(decrypted).toString('utf-8')) // "Hello GlueChat!"
 ```
 
 ---
@@ -67,8 +66,8 @@ console.log(keys)
     accountName: 'gluechat_alice',
     secretName: 'device1-otk-a1b2c3d4',
     id: 'a1b2c3d4',
-    pubKey: '<base64_public_key>',
-    privateKey: '<base64_private_key>'
+    pubKey: Uint8Array(...),
+    privateKey: Uint8Array(...)
   },
   ...
 ]
@@ -84,7 +83,7 @@ Generate cryptographically secure random bytes.
 ```typescript
 import { randomBytes } from '@glueeeed/gluechat-crypto'
 
-const bytes: Uint8Array<ArrayBufferLike> = randomBytes(32);
+const bytes: Uint8Array = randomBytes(32);
 const buffer = Buffer.from(bytes);
 ```
 
@@ -110,19 +109,19 @@ const bobsKey = kemKeypair(KemLength.MlKem1024);
 
 // 2. Sender (Alice) encapsulates using Bob's public key
 // Returns the KEM ciphertext (to be sent over network) and the shared secret
-const {ciphertext, sharedSecret} = encapsulate(KemLength.MlKem1024,bobsKey.publicKey)
+const {ciphertext, sharedSecret} = encapsulate(KemLength.MlKem1024, bobsKey.publicKey)
 
 // 3. Alice encrypts a message using the shared secret
-const encryptedMsg = encrypt('Hello from post-quantum world!', sharedSecret)
+const encryptedMsg = encrypt(Buffer.from('Hello from post-quantum world!'), sharedSecret)
 
 // --- NETWORK TRANSFER: Alice sends `ciphertext` and `encryptedMsg` to Bob ---
 
 // 4. Bob decapsulates the ciphertext using his private key to recover the shared secret
-const bobsSecret = decapsulate(KemLength.MlKem1024,bobsKey.privateKey, ciphertext)
+const bobsSecret = decapsulate(KemLength.MlKem1024, bobsKey.privateKey, ciphertext)
 
 // 5. Bob decrypts the message with the recovered secret
 const decryptedMsg = decrypt(encryptedMsg, bobsSecret)
-console.log(decryptedMsg) // "Hello from post-quantum world!"
+console.log(Buffer.from(decryptedMsg).toString('utf-8')) // "Hello from post-quantum world!"
 ```
 
 ---

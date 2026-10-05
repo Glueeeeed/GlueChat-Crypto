@@ -1,13 +1,10 @@
+use aws_lc_rs::encoding::AsRawBytes;
 use aws_lc_rs::kem::{
   Algorithm, Ciphertext, DecapsulationKey, DecapsulationKeyBytes, EncapsulationKey,
   EncapsulationKeyBytes, ML_KEM_1024, ML_KEM_512, ML_KEM_768,
 };
-
-use aws_lc_rs::encoding::{AsDer, AsRawBytes};
-use aws_lc_rs::rand::SystemRandom;
 use aws_lc_rs::signature::{
   KeyPair, PqdsaKeyPair, PqdsaSigningAlgorithm, PqdsaVerificationAlgorithm, UnparsedPublicKey,
-  ML_DSA_44, ML_DSA_44_SIGNING, ML_DSA_65, ML_DSA_65_SIGNING, ML_DSA_87, ML_DSA_87_SIGNING,
 };
 use aws_lc_rs::{rand, signature};
 use chacha20poly1305::{
@@ -18,14 +15,12 @@ use napi::bindgen_prelude::Uint8Array;
 use napi::Error;
 use napi_derive::napi;
 
-use base64::engine::general_purpose;
-use base64::Engine;
 use hex::encode as hex_encode;
 
 #[napi(object)]
 pub struct KEMKeyPair {
-  pub private_key: String,
-  pub public_key: String,
+  pub private_key: Uint8Array,
+  pub public_key: Uint8Array,
 }
 
 #[napi(object)]
@@ -33,14 +28,14 @@ pub struct OneTimeKey {
   pub account_name: String,
   pub secret_name: String,
   pub id: String,
-  pub pub_key: String,
-  pub private_key: String,
+  pub pub_key: Uint8Array,
+  pub private_key: Uint8Array,
 }
 
 #[napi(object)]
 pub struct EncapsulationResult {
-  pub ciphertext: String,
-  pub shared_secret: String,
+  pub ciphertext: Uint8Array,
+  pub shared_secret: Uint8Array,
 }
 
 #[napi]
@@ -57,10 +52,10 @@ pub enum MlDsaLength {
   MlDsa44,
 }
 
-#[napi]
+#[napi(object)]
 pub struct DSAKeyPair {
-  pub private_key: String,
-  pub public_key: String,
+  pub private_key: Uint8Array,
+  pub public_key: Uint8Array,
 }
 
 #[napi]
@@ -81,8 +76,8 @@ pub fn ml_dsa_keypair(length: MlDsaLength) -> napi::Result<DSAKeyPair> {
     .as_raw_bytes()
     .map_err(|_| Error::from_reason("Failed to generate key pair"))?;
 
-  let private_key = general_purpose::STANDARD.encode(private_key_bytes.as_ref());
-  let public_key = general_purpose::STANDARD.encode(public_key_bytes);
+  let private_key = Uint8Array::from(private_key_bytes.as_ref());
+  let public_key = Uint8Array::from(public_key_bytes);
 
   Ok(DSAKeyPair {
     private_key,
@@ -93,36 +88,34 @@ pub fn ml_dsa_keypair(length: MlDsaLength) -> napi::Result<DSAKeyPair> {
 #[napi]
 pub fn ml_dsa_sign(
   length: MlDsaLength,
-  private_key_base64: String,
+  private_key: Uint8Array,
   message: Uint8Array,
-) -> napi::Result<String> {
+) -> napi::Result<Uint8Array> {
   let algorithm: &'static PqdsaSigningAlgorithm = match length {
     MlDsaLength::MlDsa44 => &signature::ML_DSA_44_SIGNING,
     MlDsaLength::MlDsa65 => &signature::ML_DSA_65_SIGNING,
     MlDsaLength::MlDsa87 => &signature::ML_DSA_87_SIGNING,
   };
 
-  let priv_key_bytes = general_purpose::STANDARD
-    .decode(&private_key_base64)
-    .map_err(|e| Error::from_reason(format!("Invalid private key base64: {e}")))?;
+  let priv_key_bytes = private_key.as_ref();
 
-  let key_pair = PqdsaKeyPair::from_raw_private_key(algorithm, &priv_key_bytes)
+  let key_pair = PqdsaKeyPair::from_raw_private_key(algorithm, priv_key_bytes)
     .map_err(|_| Error::from_reason("Invalid private key bytes"))?;
 
   let mut signature = vec![0u8; algorithm.signature_len()];
   key_pair
-    .sign(&message, &mut signature)
+    .sign(message.as_ref(), &mut signature)
     .map_err(|_| Error::from_reason("Signing failed"))?;
 
-  Ok(general_purpose::STANDARD.encode(signature))
+  Ok(Uint8Array::from(signature))
 }
 
 #[napi]
 pub fn ml_dsa_verify(
   length: MlDsaLength,
-  public_key_base64: String,
+  public_key: Uint8Array,
   message: Uint8Array,
-  signature_base64: String,
+  signature: Uint8Array,
 ) -> napi::Result<bool> {
   let algorithm: &'static PqdsaVerificationAlgorithm = match length {
     MlDsaLength::MlDsa44 => &signature::ML_DSA_44,
@@ -130,38 +123,28 @@ pub fn ml_dsa_verify(
     MlDsaLength::MlDsa87 => &signature::ML_DSA_87,
   };
 
-  let pub_key_bytes = general_purpose::STANDARD
-    .decode(&public_key_base64)
-    .map_err(|e| Error::from_reason(format!("Invalid public key base64: {e}")))?;
-
-  let signature_bytes = general_purpose::STANDARD
-    .decode(&signature_base64)
-    .map_err(|e| Error::from_reason(format!("Invalid signature base64: {e}")))?;
+  let pub_key_bytes = public_key.as_ref();
+  let signature_bytes = signature.as_ref();
 
   let public_key = UnparsedPublicKey::new(algorithm, pub_key_bytes);
 
-  match public_key.verify(&message, &signature_bytes) {
+  match public_key.verify(message.as_ref(), signature_bytes) {
     Ok(_) => Ok(true),
     Err(_) => Ok(false),
   }
 }
 
 #[napi]
-pub fn encapsulate(
-  length: KemLength,
-  public_key_base64: String,
-) -> napi::Result<EncapsulationResult> {
+pub fn encapsulate(length: KemLength, public_key: Uint8Array) -> napi::Result<EncapsulationResult> {
   let algorithm: &'static Algorithm = match length {
     KemLength::MlKem1024 => &ML_KEM_1024,
     KemLength::MlKem768 => &ML_KEM_768,
     KemLength::MlKem512 => &ML_KEM_512,
   };
 
-  let pub_key_bytes = general_purpose::STANDARD
-    .decode(&public_key_base64)
-    .map_err(|e| Error::from_reason(format!("Invalid public key base64: {e}")))?;
+  let pub_key_bytes = public_key.as_ref();
 
-  let enc_key = EncapsulationKey::new(algorithm, &pub_key_bytes)
+  let enc_key = EncapsulationKey::new(algorithm, pub_key_bytes)
     .map_err(|_| Error::from_reason("Invalid public key bytes"))?;
 
   let (ciphertext_bytes, shared_secret) = enc_key
@@ -169,41 +152,36 @@ pub fn encapsulate(
     .map_err(|_| Error::from_reason("Encapsulation failed"))?;
 
   Ok(EncapsulationResult {
-    ciphertext: general_purpose::STANDARD.encode(ciphertext_bytes.as_ref()),
-    shared_secret: general_purpose::STANDARD.encode(shared_secret.as_ref()),
+    ciphertext: Uint8Array::from(ciphertext_bytes.as_ref()),
+    shared_secret: Uint8Array::from(shared_secret.as_ref()),
   })
 }
 
 #[napi]
 pub fn decapsulate(
   length: KemLength,
-  private_key_base64: String,
-  ciphertext_base64: String,
-) -> napi::Result<String> {
+  private_key: Uint8Array,
+  ciphertext: Uint8Array,
+) -> napi::Result<Uint8Array> {
   let algorithm: &'static Algorithm = match length {
     KemLength::MlKem1024 => &ML_KEM_1024,
     KemLength::MlKem768 => &ML_KEM_768,
     KemLength::MlKem512 => &ML_KEM_512,
   };
 
-  let priv_key_bytes = general_purpose::STANDARD
-    .decode(&private_key_base64)
-    .map_err(|e| Error::from_reason(format!("Invalid private key base64: {e}")))?;
+  let priv_key_bytes = private_key.as_ref();
+  let ciphertext_bytes = ciphertext.as_ref();
 
-  let ciphertext_bytes = general_purpose::STANDARD
-    .decode(&ciphertext_base64)
-    .map_err(|e| Error::from_reason(format!("Invalid ciphertext base64: {e}")))?;
-
-  let dec_key = DecapsulationKey::new(algorithm, &priv_key_bytes)
+  let dec_key = DecapsulationKey::new(algorithm, priv_key_bytes)
     .map_err(|_| Error::from_reason("Invalid private key bytes"))?;
 
-  let ciphertext = Ciphertext::from(ciphertext_bytes.as_slice());
+  let ciphertext = Ciphertext::from(ciphertext_bytes);
 
   let shared_secret = dec_key
     .decapsulate(ciphertext)
     .map_err(|_| Error::from_reason("Decapsulation failed"))?;
 
-  Ok(general_purpose::STANDARD.encode(shared_secret.as_ref()))
+  Ok(Uint8Array::from(shared_secret.as_ref()))
 }
 
 #[napi]
@@ -219,17 +197,14 @@ pub fn random_bytes(length: u32) -> Uint8Array {
 }
 
 #[napi]
-pub fn encrypt(plaintext: String, key: String) -> napi::Result<String> {
-  let key_bytes: Vec<u8> = general_purpose::STANDARD
-    .decode(&key)
-    .map_err(|e| Error::from_reason(format!("Invalid key base64: {e}")))?;
-
+pub fn encrypt(plaintext: Uint8Array, key: Uint8Array) -> napi::Result<Uint8Array> {
+  let key_bytes = key.as_ref();
   if key_bytes.len() != 32 {
     return Err(Error::from_reason("Key must be 32 bytes long"));
   }
 
   let cipher =
-    XChaCha20Poly1305::new_from_slice(&key_bytes).map_err(|_| Error::from_reason("Invalid key"))?;
+    XChaCha20Poly1305::new_from_slice(key_bytes).map_err(|_| Error::from_reason("Invalid key"))?;
 
   let mut nonce_bytes: [u8; 24] = [0u8; 24];
   rand::fill(&mut nonce_bytes).map_err(|_| Error::from_reason("Random generation failed"))?;
@@ -237,56 +212,43 @@ pub fn encrypt(plaintext: String, key: String) -> napi::Result<String> {
     .map_err(|_| Error::from_reason("Invalid nonce length"))?;
 
   let ciphertext: Vec<u8> = cipher
-    .encrypt(&nonce, plaintext.as_bytes())
+    .encrypt(&nonce, plaintext.as_ref())
     .map_err(|_| Error::from_reason("Encryption failed"))?;
 
-  let ciphertext_base64: String = general_purpose::STANDARD.encode(&ciphertext);
-  let nonce_base64: String = general_purpose::STANDARD.encode(nonce_bytes);
+  let mut combined = Vec::with_capacity(nonce_bytes.len() + ciphertext.len());
+  combined.extend_from_slice(&nonce_bytes);
+  combined.extend_from_slice(&ciphertext);
 
-  Ok(format!("{ciphertext_base64}::{nonce_base64}"))
+  Ok(Uint8Array::from(combined))
 }
 
 #[napi]
-pub fn decrypt(ciphertext: String, key: String) -> napi::Result<String> {
-  let parts: Vec<&str> = ciphertext.split("::").collect();
-  if parts.len() != 2 {
+pub fn decrypt(ciphertext: Uint8Array, key: Uint8Array) -> napi::Result<Uint8Array> {
+  let ciphertext_bytes = ciphertext.as_ref();
+  if ciphertext_bytes.len() < 24 {
     return Err(Error::from_reason(
-      "Invalid ciphertext format. Expected payload::nonce",
+      "Invalid ciphertext length. Must be at least 24 bytes (nonce)",
     ));
   }
 
-  let ciphertext_bytes: Vec<u8> = general_purpose::STANDARD
-    .decode(parts[0])
-    .map_err(|e| Error::from_reason(format!("Invalid ciphertext base64: {e}")))?;
+  let (nonce_bytes, payload_bytes) = ciphertext_bytes.split_at(24);
 
-  let nonce_bytes: Vec<u8> = general_purpose::STANDARD
-    .decode(parts[1])
-    .map_err(|e| Error::from_reason(format!("Invalid nonce base64: {e}")))?;
-
-  if nonce_bytes.len() != 24 {
-    return Err(Error::from_reason("Nonce must be 24 bytes long"));
-  }
-
-  let key_bytes: Vec<u8> = general_purpose::STANDARD
-    .decode(&key)
-    .map_err(|e| Error::from_reason(format!("Invalid key base64: {e}")))?;
-
+  let key_bytes = key.as_ref();
   if key_bytes.len() != 32 {
     return Err(Error::from_reason("Key must be 32 bytes long"));
   }
 
   let cipher =
-    XChaCha20Poly1305::new_from_slice(&key_bytes).map_err(|_| Error::from_reason("Invalid key"))?;
+    XChaCha20Poly1305::new_from_slice(key_bytes).map_err(|_| Error::from_reason("Invalid key"))?;
 
-  let nonce = XNonce::try_from(nonce_bytes.as_slice())
-    .map_err(|_| Error::from_reason("Invalid nonce length"))?;
+  let nonce =
+    XNonce::try_from(nonce_bytes).map_err(|_| Error::from_reason("Invalid nonce length"))?;
 
   let plaintext: Vec<u8> = cipher
-    .decrypt(&nonce, ciphertext_bytes.as_ref())
+    .decrypt(&nonce, payload_bytes)
     .map_err(|_| Error::from_reason("Decryption failed (bad tag or key)"))?;
 
-  String::from_utf8(plaintext)
-    .map_err(|e| Error::from_reason(format!("Invalid UTF-8 plaintext: {e}")))
+  Ok(Uint8Array::from(plaintext))
 }
 
 #[napi]
@@ -324,8 +286,8 @@ pub fn generate_one_time_keys(
       .key_bytes()
       .map_err(|_| Error::from_reason("Failed convert private key to bytes"))?;
 
-    let private_key: String = general_purpose::STANDARD.encode(private_key_bytes.as_ref());
-    let public_key: String = general_purpose::STANDARD.encode(pub_key_bytes.as_ref());
+    let private_key = Uint8Array::from(private_key_bytes.as_ref());
+    let public_key = Uint8Array::from(pub_key_bytes.as_ref());
 
     let secret_name: String = format!("{}-otk-{}", prefix, key_id);
     let account_name: String = format!("gluechat_{}", account_name);
@@ -366,8 +328,8 @@ pub fn kem_keypair(length: KemLength) -> napi::Result<KEMKeyPair> {
     .key_bytes()
     .map_err(|_| Error::from_reason("Failed to convert private key to bytes"))?;
 
-  let private_key: String = general_purpose::STANDARD.encode(private_key_bytes.as_ref());
-  let public_key: String = general_purpose::STANDARD.encode(pub_key_bytes.as_ref());
+  let private_key = Uint8Array::from(private_key_bytes.as_ref());
+  let public_key = Uint8Array::from(pub_key_bytes.as_ref());
 
   Ok(KEMKeyPair {
     private_key,

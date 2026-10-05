@@ -9,24 +9,23 @@
  */
 export declare const __napiBindingTarget: 'native' | 'wasm32-wasi' | 'wasm32-wasip1'
 
-export declare class DsaKeyPair {
-  privateKey: string
-  publicKey: string
+export declare function decapsulate(length: KemLength, privateKey: Uint8Array, ciphertext: Uint8Array): Uint8Array
+
+export declare function decrypt(ciphertext: Uint8Array, key: Uint8Array): Uint8Array
+
+export interface DsaKeyPair {
+  privateKey: Uint8Array
+  publicKey: Uint8Array
 }
-export type DSAKeyPair = DsaKeyPair
 
-export declare function decapsulate(length: KemLength, privateKeyBase64: string, ciphertextBase64: string): string
-
-export declare function decrypt(ciphertext: string, key: string): string
-
-export declare function encapsulate(length: KemLength, publicKeyBase64: string): EncapsulationResult
+export declare function encapsulate(length: KemLength, publicKey: Uint8Array): EncapsulationResult
 
 export interface EncapsulationResult {
-  ciphertext: string
-  sharedSecret: string
+  ciphertext: Uint8Array
+  sharedSecret: Uint8Array
 }
 
-export declare function encrypt(plaintext: string, key: string): string
+export declare function encrypt(plaintext: Uint8Array, key: Uint8Array): Uint8Array
 
 export declare function generateOneTimeKeys(length: KemLength, qty: number, accountName: string, prefix: string): Array<OneTimeKey>
 
@@ -35,8 +34,8 @@ export declare function helloCrypto(): string
 export declare function kemKeypair(length: KemLength): KemKeyPair
 
 export interface KemKeyPair {
-  privateKey: string
-  publicKey: string
+  privateKey: Uint8Array
+  publicKey: Uint8Array
 }
 
 export declare const enum KemLength {
@@ -53,16 +52,16 @@ export declare const enum MlDsaLength {
   MlDsa44 = 2,
 }
 
-export declare function mlDsaSign(length: MlDsaLength, privateKeyBase64: string, message: Uint8Array): string
+export declare function mlDsaSign(length: MlDsaLength, privateKey: Uint8Array, message: Uint8Array): Uint8Array
 
-export declare function mlDsaVerify(length: MlDsaLength, publicKeyBase64: string, message: Uint8Array, signatureBase64: string): boolean
+export declare function mlDsaVerify(length: MlDsaLength, publicKey: Uint8Array, message: Uint8Array, signature: Uint8Array): boolean
 
 export interface OneTimeKey {
   accountName: string
   secretName: string
   id: string
-  pubKey: string
-  privateKey: string
+  pubKey: Uint8Array
+  privateKey: Uint8Array
 }
 
 export declare function randomBytes(length: number): Uint8Array
