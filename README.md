@@ -6,6 +6,7 @@
 
 - **Symmetric Encryption & Decryption**: Authenticated encryption using **XChaCha20-Poly1305** (AEAD) with 24-byte nonces and 32-byte keys.
 - **ML-KEM Support**: Generate and encapsulate/decapsulate keys using ML-KEM based on NIST post-quantum standard (via `aws-lc-rs`).
+- **ML-DSA Support**: Generate, sign, and verify digital signatures using ML-DSA based on NIST post-quantum standard (via `aws-lc-rs`).
 - **Native Performance**: Implemented in Rust with zero-overhead Node-API (`napi-rs`) bindings.
 --- 
 
@@ -55,7 +56,7 @@ console.log('Decrypted message:', decrypted) // "Hello GlueChat!"
 Generate batches of One-Time Keys (OTKs) for user accounts using post-quantum key encapsulation (ML-KEM-1024, ML-KEM-768, ML-KEM-512).
 
 ```typescript
-import { generateOneTimeKeys, OneTimeKey } from '@glueeeed/gluechat-crypto'
+import { generateOneTimeKeys, KemLength } from '@glueeeed/gluechat-crypto'
 
 const keys = generateOneTimeKeys(KemLength.MlKem1024, 2, 'alice', 'device1');  // 2 OTKs for 'alice' on 'device1' ML-KEM-1024
 
@@ -95,22 +96,21 @@ Use ML-KEM-1024, ML-KEM-768, ML-KEM-512 post-quantum key encapsulation to establ
 
 ```typescript
 import {
-    generateOneTimeKeys,
     encapsulate,
     decapsulate,
     encrypt,
     decrypt,
-    generateKemKeypair,
+    kemKeypair,
     KemLength
 } from '@glueeeed/gluechat-crypto'
 
 
 // 1. Receiver (Bob) generates a key pair
-const bobsKey = generateKemKeypair(KemLength.MlKem1024);
+const bobsKey = kemKeypair(KemLength.MlKem1024);
 
 // 2. Sender (Alice) encapsulates using Bob's public key
 // Returns the KEM ciphertext (to be sent over network) and the shared secret
-const {ciphertext, sharedSecret} = encapsulate(KemLength.MlKem1024,bobsKey.pubKey)
+const {ciphertext, sharedSecret} = encapsulate(KemLength.MlKem1024,bobsKey.publicKey)
 
 // 3. Alice encrypts a message using the shared secret
 const encryptedMsg = encrypt('Hello from post-quantum world!', sharedSecret)
@@ -130,9 +130,31 @@ console.log(decryptedMsg) // "Hello from post-quantum world!"
 ### 5. Generate a Key Pair (ML-KEM-1024, ML-KEM-768, ML-KEM-512)
 
 ```typescript
-import { generateKemKeypair, KemLength } from '@glueeeed/gluechat-crypto'
+import { kemKeypair, KemLength } from '@glueeeed/gluechat-crypto'
 
-const keypair = generateKemKeypair(KemLength.MlKem1024) // You can use KemLength.MlKem768 or KemLength.MlKem512
+const keypair = kemKeypair(KemLength.MlKem1024) // You can use KemLength.MlKem768 or KemLength.MlKem512
+```
+
+---
+
+### 6. Digital Signatures (ML-DSA-44, ML-DSA-65, ML-DSA-87)
+
+Generate post-quantum digital signatures using ML-DSA.
+
+```typescript
+import { mlDsaKeypair, mlDsaSign, mlDsaVerify, MlDsaLength } from '@glueeeed/gluechat-crypto'
+
+// 1. Generate a signing key pair
+const keypair = mlDsaKeypair(MlDsaLength.MlDsa44)
+
+const message = Buffer.from('Message to sign')
+
+// 2. Sign a message
+const signature = mlDsaSign(MlDsaLength.MlDsa44, keypair.privateKey, message)
+
+// 3. Verify the signature
+const isValid = mlDsaVerify(MlDsaLength.MlDsa44, keypair.publicKey, message, signature)
+console.log('Signature valid:', isValid) // true
 ```
 
 ## License

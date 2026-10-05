@@ -7,6 +7,8 @@ import {
   decrypt,
   generateOneTimeKeys,
     mlDsaKeypair,
+    mlDsaSign,
+    mlDsaVerify,
     kemKeypair,
   MlDsaLength,
   KemLength,
@@ -104,4 +106,19 @@ test(' generate ML-DSA pair of keys', (t) => {
 
   t.is(aliceKey.publicKey.length, 2604);
   t.is(aliceKey.privateKey.length, 5376);
+})
+
+test('sign and verify using ML-DSA', (t) => {
+  const aliceKey = mlDsaKeypair(MlDsaLength.MlDsa44);
+  const message = Buffer.from('Important Message to Sign');
+  
+  const signature = mlDsaSign(MlDsaLength.MlDsa44, aliceKey.privateKey, message);
+  t.truthy(signature);
+  t.true(signature.length > 0);
+  
+  const isValid = mlDsaVerify(MlDsaLength.MlDsa44, aliceKey.publicKey, message, signature);
+  t.true(isValid);
+  
+  const isInvalid = mlDsaVerify(MlDsaLength.MlDsa44, aliceKey.publicKey, Buffer.from('Tampered Message'), signature);
+  t.false(isInvalid);
 })

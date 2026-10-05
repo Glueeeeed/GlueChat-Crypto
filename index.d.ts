@@ -53,6 +53,10 @@ export declare const enum MlDsaLength {
   MlDsa44 = 2,
 }
 
+export declare function mlDsaSign(length: MlDsaLength, privateKeyBase64: string, message: Uint8Array): string
+
+export declare function mlDsaVerify(length: MlDsaLength, publicKeyBase64: string, message: Uint8Array, signatureBase64: string): boolean
+
 export interface OneTimeKey {
   accountName: string
   secretName: string

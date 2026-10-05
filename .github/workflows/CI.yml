@@ -11,7 +11,7 @@ on:
     branches:
       - main
     tags:
-      - 'v*.*.*' # Pozwala odpalać workflow dla tagów wersji (np. v1.0.1)
+      - 'v*.*.*' 
     paths-ignore:
       - '**/*.md'
       - LICENSE

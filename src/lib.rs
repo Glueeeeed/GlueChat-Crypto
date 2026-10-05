@@ -6,8 +6,8 @@ use aws_lc_rs::kem::{
 use aws_lc_rs::encoding::{AsDer, AsRawBytes};
 use aws_lc_rs::rand::SystemRandom;
 use aws_lc_rs::signature::{
-  KeyPair, PqdsaKeyPair, PqdsaSigningAlgorithm, UnparsedPublicKey, ML_DSA_44_SIGNING,
-  ML_DSA_65_SIGNING, ML_DSA_87_SIGNING,
+  KeyPair, PqdsaKeyPair, PqdsaSigningAlgorithm, PqdsaVerificationAlgorithm, UnparsedPublicKey,
+  ML_DSA_44, ML_DSA_44_SIGNING, ML_DSA_65, ML_DSA_65_SIGNING, ML_DSA_87, ML_DSA_87_SIGNING,
 };
 use aws_lc_rs::{rand, signature};
 use chacha20poly1305::{
@@ -65,7 +65,7 @@ pub struct DSAKeyPair {
 
 #[napi]
 pub fn ml_dsa_keypair(length: MlDsaLength) -> napi::Result<DSAKeyPair> {
-  let algorithm = match length {
+  let algorithm: &'static PqdsaSigningAlgorithm = match length {
     MlDsaLength::MlDsa44 => &signature::ML_DSA_44_SIGNING,
     MlDsaLength::MlDsa65 => &signature::ML_DSA_65_SIGNING,
     MlDsaLength::MlDsa87 => &signature::ML_DSA_87_SIGNING,
@@ -88,6 +88,62 @@ pub fn ml_dsa_keypair(length: MlDsaLength) -> napi::Result<DSAKeyPair> {
     private_key,
     public_key,
   })
+}
+
+#[napi]
+pub fn ml_dsa_sign(
+  length: MlDsaLength,
+  private_key_base64: String,
+  message: Uint8Array,
+) -> napi::Result<String> {
+  let algorithm: &'static PqdsaSigningAlgorithm = match length {
+    MlDsaLength::MlDsa44 => &signature::ML_DSA_44_SIGNING,
+    MlDsaLength::MlDsa65 => &signature::ML_DSA_65_SIGNING,
+    MlDsaLength::MlDsa87 => &signature::ML_DSA_87_SIGNING,
+  };
+
+  let priv_key_bytes = general_purpose::STANDARD
+    .decode(&private_key_base64)
+    .map_err(|e| Error::from_reason(format!("Invalid private key base64: {e}")))?;
+
+  let key_pair = PqdsaKeyPair::from_raw_private_key(algorithm, &priv_key_bytes)
+    .map_err(|_| Error::from_reason("Invalid private key bytes"))?;
+
+  let mut signature = vec![0u8; algorithm.signature_len()];
+  key_pair
+    .sign(&message, &mut signature)
+    .map_err(|_| Error::from_reason("Signing failed"))?;
+
+  Ok(general_purpose::STANDARD.encode(signature))
+}
+
+#[napi]
+pub fn ml_dsa_verify(
+  length: MlDsaLength,
+  public_key_base64: String,
+  message: Uint8Array,
+  signature_base64: String,
+) -> napi::Result<bool> {
+  let algorithm: &'static PqdsaVerificationAlgorithm = match length {
+    MlDsaLength::MlDsa44 => &signature::ML_DSA_44,
+    MlDsaLength::MlDsa65 => &signature::ML_DSA_65,
+    MlDsaLength::MlDsa87 => &signature::ML_DSA_87,
+  };
+
+  let pub_key_bytes = general_purpose::STANDARD
+    .decode(&public_key_base64)
+    .map_err(|e| Error::from_reason(format!("Invalid public key base64: {e}")))?;
+
+  let signature_bytes = general_purpose::STANDARD
+    .decode(&signature_base64)
+    .map_err(|e| Error::from_reason(format!("Invalid signature base64: {e}")))?;
+
+  let public_key = UnparsedPublicKey::new(algorithm, pub_key_bytes);
+
+  match public_key.verify(&message, &signature_bytes) {
+    Ok(_) => Ok(true),
+    Err(_) => Ok(false),
+  }
 }
 
 #[napi]

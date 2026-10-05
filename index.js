@@ -790,4 +790,6 @@ module.exports.kemKeypair = nativeBinding.kemKeypair
 module.exports.KemLength = nativeBinding.KemLength
 module.exports.mlDsaKeypair = nativeBinding.mlDsaKeypair
 module.exports.MlDsaLength = nativeBinding.MlDsaLength
+module.exports.mlDsaSign = nativeBinding.mlDsaSign
+module.exports.mlDsaVerify = nativeBinding.mlDsaVerify
 module.exports.randomBytes = nativeBinding.randomBytes
