@@ -6,7 +6,9 @@ import {
   encrypt,
   decrypt,
   generateOneTimeKeys,
-  generateKemKeypair,
+    mlDsaKeypair,
+    kemKeypair,
+  MlDsaLength,
   KemLength,
   encapsulate,
   decapsulate,
@@ -47,7 +49,7 @@ test('generateOneTimeKeys creates requested amount of keys', (t) => {
 
 test('encapsulate and decapsulate produce the same shared secret', (t) => {
 
-  const bobsKey = generateKemKeypair(KemLength.MlKem768);
+  const bobsKey = kemKeypair(KemLength.MlKem768);
 
   const { ciphertext, sharedSecret } = encapsulate(KemLength.MlKem768,bobsKey.publicKey);
 
@@ -61,8 +63,8 @@ test('encapsulate and decapsulate produce the same shared secret', (t) => {
 })
 
 test('decapsulate with wrong private key produces different shared secret', (t) => {
-  const bobsKey = generateKemKeypair(KemLength.MlKem512);
-  const evesKey = generateKemKeypair(KemLength.MlKem512);
+  const bobsKey = kemKeypair(KemLength.MlKem512);
+  const evesKey = kemKeypair(KemLength.MlKem512);
 
   const { sharedSecret, ciphertext } = encapsulate(KemLength.MlKem512, bobsKey.publicKey);
 
@@ -72,7 +74,7 @@ test('decapsulate with wrong private key produces different shared secret', (t) 
 })
 
 test('encrypt and decrypt using ML-KEM shared secret', (t) => {
-  const receiverKey = generateKemKeypair(KemLength.MlKem512);
+  const receiverKey = kemKeypair(KemLength.MlKem512);
 
   const { ciphertext, sharedSecret } = encapsulate(KemLength.MlKem512,receiverKey.publicKey);
   const message = 'Post-Quantum GlueChat Message';
@@ -85,7 +87,7 @@ test('encrypt and decrypt using ML-KEM shared secret', (t) => {
 })
 
 test('generate ML-KEM pair of keys', (t) => {
-  const aliceKey = generateKemKeypair(KemLength.MlKem1024);
+  const aliceKey = kemKeypair(KemLength.MlKem1024);
 
 
   t.truthy(aliceKey.privateKey);
@@ -94,3 +96,12 @@ test('generate ML-KEM pair of keys', (t) => {
   t.is(aliceKey.publicKey.length, 2092);
   t.is(aliceKey.privateKey.length, 4224);
 });
+
+test(' generate ML-DSA pair of keys', (t) => {
+  const aliceKey = mlDsaKeypair(MlDsaLength.MlDsa65);
+  t.truthy(aliceKey.privateKey);
+  t.truthy(aliceKey.publicKey);
+
+  t.is(aliceKey.publicKey.length, 2604);
+  t.is(aliceKey.privateKey.length, 5376);
+})

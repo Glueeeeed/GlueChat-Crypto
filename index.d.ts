@@ -9,6 +9,12 @@
  */
 export declare const __napiBindingTarget: 'native' | 'wasm32-wasi' | 'wasm32-wasip1'
 
+export declare class DsaKeyPair {
+  privateKey: string
+  publicKey: string
+}
+export type DSAKeyPair = DsaKeyPair
+
 export declare function decapsulate(length: KemLength, privateKeyBase64: string, ciphertextBase64: string): string
 
 export declare function decrypt(ciphertext: string, key: string): string
@@ -22,11 +28,16 @@ export interface EncapsulationResult {
 
 export declare function encrypt(plaintext: string, key: string): string
 
-export declare function generateKemKeypair(length: KemLength): KeyPair
-
 export declare function generateOneTimeKeys(length: KemLength, qty: number, accountName: string, prefix: string): Array<OneTimeKey>
 
 export declare function helloCrypto(): string
+
+export declare function kemKeypair(length: KemLength): KemKeyPair
+
+export interface KemKeyPair {
+  privateKey: string
+  publicKey: string
+}
 
 export declare const enum KemLength {
   MlKem1024 = 0,
@@ -34,9 +45,12 @@ export declare const enum KemLength {
   MlKem512 = 2,
 }
 
-export interface KeyPair {
-  privateKey: string
-  publicKey: string
+export declare function mlDsaKeypair(length: MlDsaLength): DsaKeyPair
+
+export declare const enum MlDsaLength {
+  MlDsa87 = 0,
+  MlDsa65 = 1,
+  MlDsa44 = 2,
 }
 
 export interface OneTimeKey {

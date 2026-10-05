@@ -2,7 +2,14 @@ use aws_lc_rs::kem::{
   Algorithm, Ciphertext, DecapsulationKey, DecapsulationKeyBytes, EncapsulationKey,
   EncapsulationKeyBytes, ML_KEM_1024, ML_KEM_512, ML_KEM_768,
 };
-use aws_lc_rs::rand;
+
+use aws_lc_rs::encoding::{AsDer, AsRawBytes};
+use aws_lc_rs::rand::SystemRandom;
+use aws_lc_rs::signature::{
+  KeyPair, PqdsaKeyPair, PqdsaSigningAlgorithm, UnparsedPublicKey, ML_DSA_44_SIGNING,
+  ML_DSA_65_SIGNING, ML_DSA_87_SIGNING,
+};
+use aws_lc_rs::{rand, signature};
 use chacha20poly1305::{
   aead::{Aead, KeyInit},
   XChaCha20Poly1305, XNonce,
@@ -16,7 +23,7 @@ use base64::Engine;
 use hex::encode as hex_encode;
 
 #[napi(object)]
-pub struct KeyPair {
+pub struct KEMKeyPair {
   pub private_key: String,
   pub public_key: String,
 }
@@ -41,6 +48,46 @@ pub enum KemLength {
   MlKem1024,
   MlKem768,
   MlKem512,
+}
+
+#[napi]
+pub enum MlDsaLength {
+  MlDsa87,
+  MlDsa65,
+  MlDsa44,
+}
+
+#[napi]
+pub struct DSAKeyPair {
+  pub private_key: String,
+  pub public_key: String,
+}
+
+#[napi]
+pub fn ml_dsa_keypair(length: MlDsaLength) -> napi::Result<DSAKeyPair> {
+  let algorithm = match length {
+    MlDsaLength::MlDsa44 => &signature::ML_DSA_44_SIGNING,
+    MlDsaLength::MlDsa65 => &signature::ML_DSA_65_SIGNING,
+    MlDsaLength::MlDsa87 => &signature::ML_DSA_87_SIGNING,
+  };
+
+  let key_pair = PqdsaKeyPair::generate(algorithm)
+    .map_err(|_| Error::from_reason("Failed to generate key pair"))?;
+
+  let public_key_bytes = key_pair.public_key().as_ref();
+
+  let private_key_bytes = key_pair
+    .private_key()
+    .as_raw_bytes()
+    .map_err(|_| Error::from_reason("Failed to generate key pair"))?;
+
+  let private_key = general_purpose::STANDARD.encode(private_key_bytes.as_ref());
+  let public_key = general_purpose::STANDARD.encode(public_key_bytes);
+
+  Ok(DSAKeyPair {
+    private_key,
+    public_key,
+  })
 }
 
 #[napi]
@@ -242,7 +289,7 @@ pub fn generate_one_time_keys(
 }
 
 #[napi]
-pub fn generate_kem_keypair(length: KemLength) -> napi::Result<KeyPair> {
+pub fn kem_keypair(length: KemLength) -> napi::Result<KEMKeyPair> {
   let algorithm: &'static Algorithm = match length {
     KemLength::MlKem1024 => &ML_KEM_1024,
     KemLength::MlKem768 => &ML_KEM_768,
@@ -266,7 +313,7 @@ pub fn generate_kem_keypair(length: KemLength) -> napi::Result<KeyPair> {
   let private_key: String = general_purpose::STANDARD.encode(private_key_bytes.as_ref());
   let public_key: String = general_purpose::STANDARD.encode(pub_key_bytes.as_ref());
 
-  Ok(KeyPair {
+  Ok(KEMKeyPair {
     private_key,
     public_key,
   })
